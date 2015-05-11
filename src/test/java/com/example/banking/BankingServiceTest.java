@@ -19,11 +19,14 @@ public class BankingServiceTest {
     long toAccountId = 1L;
     double toBalance = 5;
     
-    Account fromAccount = new Account(1_000);
-    Account toAccount = new Account(5);
+    Account fromAccount = new Account(fromAccountId, 1_000);
+    Account toAccount = new Account(toAccountId, 5);
 
     Assert.assertEquals(fromBalance, fromAccount.getBalance(), 0.00_001);
     Assert.assertEquals(toBalance, toAccount.getBalance(), 0.00_001);
+    
+    Assert.assertEquals(fromAccountId, fromAccount.getAccountId());
+    Assert.assertEquals(toAccountId, toAccount.getAccountId());
     
     BankingService teller = new SimpleBankingService();
 
