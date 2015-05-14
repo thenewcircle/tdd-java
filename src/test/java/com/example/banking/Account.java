@@ -3,11 +3,12 @@ package com.example.banking;
 public class Account {
 
   private final long accountId;
+  private final String name;
   private double balance;
 
-
-  public Account(long accountId, double balance) {
+  public Account(long accountId, String name, double balance) {
     this.accountId = accountId;
+    this.name = name;
     this.balance = balance;
   }
 
@@ -15,6 +16,10 @@ public class Account {
     return accountId;
   }
 
+  public String getName() {
+    return name;
+  }
+  
   public double getBalance() {
     return balance;
   }
