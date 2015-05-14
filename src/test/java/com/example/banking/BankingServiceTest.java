@@ -17,12 +17,14 @@ public class BankingServiceTest {
     double fromBalance = 1_000;
     String fromName = "Tom";
     
-    long toAccountId = 1L;
+    long toAccountId = 2L;
     double toBalance = 5;
     String toName = "Dick";
     
-    Account fromAccount = new Account(fromAccountId, fromName, 1_000);
-    Account toAccount = new Account(toAccountId, toName, 5);
+    AccountDao accountDao = new InMemoryAccountDao();
+    
+    Account fromAccount = accountDao.getAccount(fromAccountId);
+    Account toAccount = accountDao.getAccount(toAccountId);
 
     Assert.assertEquals(fromBalance, fromAccount.getBalance(), 0.00_001);
     Assert.assertEquals(toBalance, toAccount.getBalance(), 0.00_001);
