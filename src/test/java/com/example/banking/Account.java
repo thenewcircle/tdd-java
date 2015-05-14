@@ -24,4 +24,12 @@ public class Account {
     return balance;
   }
 
+  public void debit(double amount) {
+    balance -= amount;
+  }
+
+  public void credit(double amount) {
+    balance += amount;
+  }
+
 }

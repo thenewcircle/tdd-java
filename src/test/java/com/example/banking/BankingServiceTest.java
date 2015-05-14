@@ -1,6 +1,7 @@
 package com.example.banking;
 
 import org.junit.Assert;
+import org.junit.Assume;
 import org.junit.Test;
 
 public class BankingServiceTest {
@@ -39,5 +40,18 @@ public class BankingServiceTest {
 
     double amount = 750;
     teller.transfer(fromAccountId, toAccountId, amount);
+
+    Assert.assertEquals(250, fromAccount.getBalance(), 0.00_001);
+    Assert.assertEquals(755.00, toAccount.getBalance(), 0.00_001);  
+  }
+
+  @Test
+  public void testInsufficientFunds() throws Exception {
+    Assume.assumeNoException(new UnsupportedOperationException("Not yet implemented"));
+  }
+
+  @Test
+  public void testAccountNotFoundInGet() throws Exception {
+    Assume.assumeNoException(new UnsupportedOperationException("Not yet implemented"));
   }
 }
