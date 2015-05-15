@@ -22,7 +22,7 @@ public class BankingServiceTest {
     double toBalance = 5;
     String toName = "Dick";
     
-    AccountDao accountDao = new InMemoryAccountDao();
+    AccountDao accountDao = InMemoryAccountDao.getInstance();
     
     Account fromAccount = accountDao.getAccount(fromAccountId);
     Account toAccount = accountDao.getAccount(toAccountId);

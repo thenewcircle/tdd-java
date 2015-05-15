@@ -2,10 +2,16 @@ package com.example.banking;
 
 public class InMemoryAccountDao implements AccountDao {
 
+  private static final InMemoryAccountDao INSTANCE = new InMemoryAccountDao();
+  
+  public static final AccountDao getInstance() {
+    return INSTANCE;
+  }
+  
   private Account accountA;
   private Account accountB;
 
-  public InMemoryAccountDao() {
+  private InMemoryAccountDao() {
     accountA = new Account(1L, "Tom", 1_000);
     accountB = new Account(2L, "Dick", 5);
   }
