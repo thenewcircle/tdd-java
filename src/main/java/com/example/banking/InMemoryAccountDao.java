@@ -23,7 +23,7 @@ public class InMemoryAccountDao implements AccountDao {
     } else if (2L == accountId) {
       return accountB;
     } else {
-      throw new AccountNotFoundException();
+      throw new AccountNotFoundException(accountId);
     }
   }
 

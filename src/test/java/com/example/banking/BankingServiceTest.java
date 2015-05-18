@@ -53,7 +53,7 @@ public class BankingServiceTest {
     Assume.assumeNoException(new UnsupportedOperationException("Not yet implemented"));
   }
 
-  @Test(expected=AccountNotFoundException.class)
+  @Test
   public void testAccountNotFoundInGet() throws Exception {
     AccountDao accountDao = InMemoryAccountDao.getInstance();
 
@@ -63,7 +63,12 @@ public class BankingServiceTest {
     Account a2 = accountDao.getAccount(2L);
     Assert.assertNotNull(a2);
 
-    accountDao.getAccount(3L);
-    Assert.fail("Expected some exception");  
+    try {
+      accountDao.getAccount(3L);
+      Assert.fail("Expected some exception");
+
+    } catch (AccountNotFoundException e) {
+      Assert.assertEquals(3L, e.getAccountId());
+    }
   }
 }
