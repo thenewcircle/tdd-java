@@ -1,5 +1,8 @@
 package com.example.banking;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class InMemoryAccountDao implements AccountDao {
 
   private static final InMemoryAccountDao INSTANCE = new InMemoryAccountDao();
@@ -8,31 +11,23 @@ public class InMemoryAccountDao implements AccountDao {
     return INSTANCE;
   }
   
-  private Account accountA;
-  private Account accountB;
+  private final Map<Long,Account> accounts = new HashMap<>();
 
   private InMemoryAccountDao() {
-    accountA = new Account(1L, "Tom", 1_000);
-    accountB = new Account(2L, "Dick", 5);
+    accounts.put(1L, new Account(1L, "Tom", 1_000));
+    accounts.put(2L, new Account(2L, "Dick", 5));
   }
-  
+
   @Override
   public Account getAccount(long accountId) throws AccountNotFoundException {
-    if (1L == accountId) {
-      return accountA;
-    } else if (2L == accountId) {
-      return accountB;
-    } else {
+    if (accounts.containsKey(accountId) == false) {
       throw new AccountNotFoundException(accountId);
     }
+    return accounts.get(accountId);
   }
 
   @Override
   public void saveAccount(Account account) {
-    if (1L == account.getAccountId()) {
-      accountA = account;
-    } else if (2L == account.getAccountId()) {
-      accountB = account;
-    }
+    accounts.put(account.getAccountId(), account);
   }
 }
