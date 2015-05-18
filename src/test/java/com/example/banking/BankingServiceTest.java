@@ -69,6 +69,7 @@ public class BankingServiceTest {
 
     } catch (AccountNotFoundException e) {
       Assert.assertEquals(3L, e.getAccountId());
+      Assert.assertEquals("Account #3 was not found.", e.getMessage());
     }
   }
 }
