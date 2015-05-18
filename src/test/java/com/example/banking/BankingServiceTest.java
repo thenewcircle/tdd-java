@@ -2,8 +2,11 @@ package com.example.banking;
 
 import org.junit.Assert;
 import org.junit.Assume;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class BankingServiceTest {
 
   @Test
@@ -12,7 +15,7 @@ public class BankingServiceTest {
   }
   
   @Test
-  public void testTransfer() {
+  public void testTransfer() throws AccountNotFoundException {
 
     long fromAccountId = 1L;
     double fromBalance = 1_000;
@@ -50,8 +53,17 @@ public class BankingServiceTest {
     Assume.assumeNoException(new UnsupportedOperationException("Not yet implemented"));
   }
 
-  @Test
+  @Test(expected=AccountNotFoundException.class)
   public void testAccountNotFoundInGet() throws Exception {
-    Assume.assumeNoException(new UnsupportedOperationException("Not yet implemented"));
+    AccountDao accountDao = InMemoryAccountDao.getInstance();
+
+    Account a1 = accountDao.getAccount(1L);
+    Assert.assertNotNull(a1);
+    
+    Account a2 = accountDao.getAccount(2L);
+    Assert.assertNotNull(a2);
+
+    accountDao.getAccount(3L);
+    Assert.fail("Expected some exception");  
   }
 }

@@ -17,13 +17,13 @@ public class InMemoryAccountDao implements AccountDao {
   }
   
   @Override
-  public Account getAccount(long accountId) {
+  public Account getAccount(long accountId) throws AccountNotFoundException {
     if (1L == accountId) {
       return accountA;
     } else if (2L == accountId) {
       return accountB;
     } else {
-      return null;
+      throw new AccountNotFoundException();
     }
   }
 
