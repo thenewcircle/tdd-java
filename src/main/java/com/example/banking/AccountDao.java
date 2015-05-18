@@ -6,4 +6,5 @@ public interface AccountDao {
 
   public void saveAccount(Account fromAccount);
 
+  public void createAccount(long accountId, String name, double balance);
 }

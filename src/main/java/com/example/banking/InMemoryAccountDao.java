@@ -14,8 +14,6 @@ public class InMemoryAccountDao implements AccountDao {
   private final Map<Long,Account> accounts = new HashMap<>();
 
   private InMemoryAccountDao() {
-    accounts.put(1L, new Account(1L, "Tom", 1_000));
-    accounts.put(2L, new Account(2L, "Dick", 5));
   }
 
   @Override
@@ -29,5 +27,10 @@ public class InMemoryAccountDao implements AccountDao {
   @Override
   public void saveAccount(Account account) {
     accounts.put(account.getAccountId(), account);
+  }
+
+  @Override
+  public void createAccount(long accountId, String name, double balance) {
+    accounts.put(accountId, new Account(accountId, name, balance));
   }
 }

@@ -26,6 +26,8 @@ public class BankingServiceTest {
     String toName = "Dick";
     
     AccountDao accountDao = InMemoryAccountDao.getInstance();
+    accountDao.createAccount(fromAccountId, fromName, fromBalance);
+    accountDao.createAccount(toAccountId, toName, toBalance);
     
     Account fromAccount = accountDao.getAccount(fromAccountId);
     Account toAccount = accountDao.getAccount(toAccountId);
@@ -57,12 +59,26 @@ public class BankingServiceTest {
   public void testAccountNotFoundInGet() throws Exception {
     AccountDao accountDao = InMemoryAccountDao.getInstance();
 
-    Account a1 = accountDao.getAccount(1L);
-    Assert.assertNotNull(a1);
-    
-    Account a2 = accountDao.getAccount(2L);
-    Assert.assertNotNull(a2);
+    try {
+      accountDao.getAccount(1L);
+      Assert.fail("Expected some exception");
 
+    } catch (AccountNotFoundException e) {
+      Assert.assertEquals(1L, e.getAccountId());
+      Assert.assertEquals("Account #1 was not found.", e.getMessage());
+    }
+    
+    
+    try {
+      accountDao.getAccount(2L);
+      Assert.fail("Expected some exception");
+
+    } catch (AccountNotFoundException e) {
+      Assert.assertEquals(2L, e.getAccountId());
+      Assert.assertEquals("Account #2 was not found.", e.getMessage());
+    }
+
+    
     try {
       accountDao.getAccount(3L);
       Assert.fail("Expected some exception");
