@@ -72,4 +72,9 @@ public class BankingServiceTest {
       Assert.assertEquals("Account #3 was not found.", e.getMessage());
     }
   }
+
+  @Test
+  public void testAccountNotFoundWhenSaving() throws Exception {
+    Assume.assumeNoException(new UnsupportedOperationException("Not yet implemented"));
+  }
 }
