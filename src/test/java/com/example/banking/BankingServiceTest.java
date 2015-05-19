@@ -2,11 +2,15 @@ package com.example.banking;
 
 import org.junit.Assert;
 import org.junit.Assume;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(ConfigurationService.class)
 public class BankingServiceTest {
 
   @Test
@@ -42,6 +46,50 @@ public class BankingServiceTest {
     Assert.assertEquals(toName, toAccount.getName());
     
     BankingService teller = new SimpleBankingService(accountDao);
+
+    double amount = 750;
+    teller.transfer(fromAccountId, toAccountId, amount);
+
+    Assert.assertEquals(250, fromAccount.getBalance(), 0.00_001);
+    Assert.assertEquals(755.00, toAccount.getBalance(), 0.00_001);  
+  }
+  
+  @Test
+  public void testTransferWithPowerMock() throws AccountNotFoundException {
+
+    long fromAccountId = 1L;
+    double fromBalance = 1_000;
+    String fromName = "Tom";
+    
+    long toAccountId = 2L;
+    double toBalance = 5;
+    String toName = "Dick";
+    
+    AccountDao dummyAccountDao = new InMemoryAccountDao();
+    BankingService dummyBankingService = new SimpleBankingService(dummyAccountDao);
+
+    // PowerMockito.mockStatic(ConfigurationService.class);
+    
+    Mockito.when(ConfigurationService.getAccountDao()).thenReturn(dummyAccountDao);
+    Mockito.when(ConfigurationService.getBankingService()).thenReturn(dummyBankingService);
+    
+    AccountDao accountDao = ConfigurationService.getAccountDao();
+    accountDao.createAccount(fromAccountId, fromName, fromBalance);
+    accountDao.createAccount(toAccountId, toName, toBalance);
+    
+    Account fromAccount = accountDao.getAccount(fromAccountId);
+    Account toAccount = accountDao.getAccount(toAccountId);
+
+    Assert.assertEquals(fromBalance, fromAccount.getBalance(), 0.00_001);
+    Assert.assertEquals(toBalance, toAccount.getBalance(), 0.00_001);
+    
+    Assert.assertEquals(fromAccountId, fromAccount.getAccountId());
+    Assert.assertEquals(toAccountId, toAccount.getAccountId());
+    
+    Assert.assertEquals(fromName, fromAccount.getName());
+    Assert.assertEquals(toName, toAccount.getName());
+    
+    BankingService teller = ConfigurationService.getBankingService();
 
     double amount = 750;
     teller.transfer(fromAccountId, toAccountId, amount);
@@ -90,8 +138,7 @@ public class BankingServiceTest {
     Mockito.verify(accountDao).saveAccount(fromAccount);
     Mockito.verify(accountDao).saveAccount(toAccount);
 
-    Mockito.verify(accountDao, Mockito.times(2))
-      .saveAccount(Mockito.any(Account.class));
+    Mockito.verify(accountDao, Mockito.times(2)).saveAccount(Mockito.any(Account.class));
   }
 
   @Test
