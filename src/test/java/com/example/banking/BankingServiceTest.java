@@ -5,6 +5,7 @@ import org.junit.Assume;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import org.mockito.Mockito;
 
 public class BankingServiceTest {
 
@@ -47,6 +48,50 @@ public class BankingServiceTest {
 
     Assert.assertEquals(250, fromAccount.getBalance(), 0.00_001);
     Assert.assertEquals(755.00, toAccount.getBalance(), 0.00_001);  
+  }
+  
+  @Test
+  public void testTransferWithMockito() throws AccountNotFoundException {
+
+    long fromAccountId = 1L;
+    double fromBalance = 1_000;
+    String fromName = "Tom";
+    
+    long toAccountId = 2L;
+    double toBalance = 5;
+    String toName = "Dick";
+    
+    Account fromAccount = new Account(fromAccountId, fromName, fromBalance);
+    Account toAccount = new Account(toAccountId, toName, toBalance);
+    
+    AccountDao accountDao = Mockito.mock(AccountDao.class);
+    Mockito.when(accountDao.getAccount(fromAccountId)).thenReturn(fromAccount);
+    Mockito.when(accountDao.getAccount(toAccountId)).thenReturn(toAccount);
+    accountDao.createAccount(fromAccountId, fromName, fromBalance);
+    accountDao.createAccount(toAccountId, toName, toBalance);
+    
+    Assert.assertEquals(fromBalance, fromAccount.getBalance(), 0.00_001);
+    Assert.assertEquals(toBalance, toAccount.getBalance(), 0.00_001);
+    
+    Assert.assertEquals(fromAccountId, fromAccount.getAccountId());
+    Assert.assertEquals(toAccountId, toAccount.getAccountId());
+    
+    Assert.assertEquals(fromName, fromAccount.getName());
+    Assert.assertEquals(toName, toAccount.getName());
+    
+    BankingService teller = new SimpleBankingService(accountDao);
+
+    double amount = 750;
+    teller.transfer(fromAccountId, toAccountId, amount);
+
+    Assert.assertEquals(250, fromAccount.getBalance(), 0.00_001);
+    Assert.assertEquals(755.00, toAccount.getBalance(), 0.00_001);  
+
+    Mockito.verify(accountDao).saveAccount(fromAccount);
+    Mockito.verify(accountDao).saveAccount(toAccount);
+
+    Mockito.verify(accountDao, Mockito.times(2))
+      .saveAccount(Mockito.any(Account.class));
   }
 
   @Test
