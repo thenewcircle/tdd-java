@@ -6,7 +6,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class BankingServiceTest {
 
   @Test
@@ -25,7 +24,7 @@ public class BankingServiceTest {
     double toBalance = 5;
     String toName = "Dick";
     
-    AccountDao accountDao = InMemoryAccountDao.getInstance();
+    AccountDao accountDao = new InMemoryAccountDao();
     accountDao.createAccount(fromAccountId, fromName, fromBalance);
     accountDao.createAccount(toAccountId, toName, toBalance);
     
@@ -41,7 +40,7 @@ public class BankingServiceTest {
     Assert.assertEquals(fromName, fromAccount.getName());
     Assert.assertEquals(toName, toAccount.getName());
     
-    BankingService teller = new SimpleBankingService();
+    BankingService teller = new SimpleBankingService(accountDao);
 
     double amount = 750;
     teller.transfer(fromAccountId, toAccountId, amount);
@@ -56,8 +55,8 @@ public class BankingServiceTest {
   }
 
   @Test
-  public void testAccountNotFoundInGet() throws Exception {
-    AccountDao accountDao = InMemoryAccountDao.getInstance();
+  public void testZAccountNotFoundInGet() throws Exception {
+    AccountDao accountDao = new InMemoryAccountDao();
 
     try {
       accountDao.getAccount(1L);
