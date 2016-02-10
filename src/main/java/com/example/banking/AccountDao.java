@@ -2,6 +2,8 @@ package com.example.banking;
 
 public interface AccountDao {
 
-  Account getAccount(long fromAccountId);
+  Account getAccount(long id) throws AccountNotFoundException;
+
+  Account saveAccount(Account account) throws AccountNotFoundException;
 
 }

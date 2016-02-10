@@ -4,6 +4,7 @@ public class Account {
 
   private final long accountId;
   private String name;
+
   private double balance;
 
   public Account(long accountId, String name, double balance) {
@@ -23,4 +24,14 @@ public class Account {
   public String getName() {
     return name;
   }
+
+  public void debit(double amount) {
+    balance = balance - amount;
+  }
+
+  public void credit(double amount) {
+    balance = balance + amount;
+  }
 }
+
+
