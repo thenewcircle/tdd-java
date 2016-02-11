@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
+import org.mockito.Mockito;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class BankingServiceTest {
@@ -78,6 +79,57 @@ public class BankingServiceTest {
     
     Assert.assertEquals(350, fromAccount.getBalance(), 0.00_001);
     Assert.assertEquals(755, toAccount.getBalance(), 0.00_001);
+  }
+
+  
+  @Test
+  public void testTransferWithMockito() throws Exception {
+
+
+    long fromAccountId = 1L;
+    double fromBalance = 1_100;
+    String fromName = "Tom";
+    
+    long toAccountId = 2L;
+    double toBalance = 5;
+    String toName = "Dick";
+
+//    accountDao.createAccount(fromAccountId, fromName, fromBalance);
+//    accountDao.createAccount(toAccountId, toName, toBalance);
+    AccountDao accountDao = Mockito.mock(AccountDao.class);
+    teller = new SimpleBankingService(accountDao);
+    
+    Account fromAccount = new Account(fromAccountId, fromName, fromBalance);
+    // Account fromAccount = accountDao.getAccount(fromAccountId);
+    Mockito.when(accountDao.getAccount(fromAccountId)).thenReturn(fromAccount);
+    
+    Assert.assertEquals(fromBalance, fromAccount.getBalance(), 0.00_001);
+    Assert.assertEquals(fromAccountId, fromAccount.getAccountId());
+    Assert.assertEquals(fromName, fromAccount.getName());
+    
+    Account toAccount = new Account(toAccountId, toName, toBalance);
+    //Account toAccount = accountDao.getAccount(toAccountId);
+    Mockito.when(accountDao.getAccount(toAccountId)).thenReturn(toAccount);
+    
+    Assert.assertEquals(toBalance, toAccount.getBalance(), 0.00_001);
+    Assert.assertEquals(toAccountId, toAccount.getAccountId());
+    Assert.assertEquals(toName, toAccount.getName());
+    
+    double amount = 750;
+    
+    teller.transfer(fromAccountId, toAccountId, amount);
+    
+    fromAccount = accountDao.getAccount(1L);
+    toAccount = accountDao.getAccount(2L);
+    
+    Assert.assertEquals(350, fromAccount.getBalance(), 0.00_001);
+    Assert.assertEquals(755, toAccount.getBalance(), 0.00_001);
+
+    Mockito.verify(accountDao, Mockito.never()).createAccount(Mockito.anyLong(), Mockito.anyString(), Mockito.anyDouble());
+    Mockito.verify(accountDao, Mockito.times(2)).saveAccount(Mockito.any(Account.class));
+
+    Mockito.verify(accountDao).saveAccount(fromAccount);
+    Mockito.verify(accountDao).saveAccount(toAccount);
   }
 
   @Test
