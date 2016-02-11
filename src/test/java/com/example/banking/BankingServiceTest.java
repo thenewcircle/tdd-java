@@ -64,11 +64,11 @@ public class BankingServiceTest {
   public void testAccountNotFoundInGet() throws Exception {
     AccountDao accountDao = InMemoryAccountDao.getInstance();
     
-//    Account a1 = accountDao.getAccount(1L);
-//    Assert.assertNotNull(a1);
-//    
-//    Account a2 = accountDao.getAccount(2L);
-//    Assert.assertNotNull(a2);
+    Account a1 = accountDao.getAccount(1L);
+    Assert.assertNotNull(a1);
+    
+    Account a2 = accountDao.getAccount(2L);
+    Assert.assertNotNull(a2);
     
     try {
       accountDao.getAccount(3L);
