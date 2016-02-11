@@ -5,17 +5,14 @@ import java.util.Map;
 
 public class InMemoryAccountDao implements AccountDao {
 
-  private static final AccountDao DAO = new InMemoryAccountDao();
-  
-  public static AccountDao getInstance() {
-    return DAO;
-  }
+  // private static final AccountDao DAO = new InMemoryAccountDao();
+//  public static AccountDao getInstance() {
+//    return DAO;
+//  }
 
   private final Map<Long,Account> accounts = new HashMap<>();
   
-  private InMemoryAccountDao() {
-//    accounts.put(1L, new Account(1L, "Tom", 1_100));
-//    accounts.put(2L, new Account(2L, "Dick", 5));
+  public InMemoryAccountDao() {
   }
   
   @Override

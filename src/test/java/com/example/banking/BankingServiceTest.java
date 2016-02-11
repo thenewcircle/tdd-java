@@ -2,42 +2,48 @@ package com.example.banking;
 
 import org.junit.Assert;
 import org.junit.Assume;
+import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-//@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class BankingServiceTest {
 
+  private AccountDao accountDao;
+  private BankingService teller;
+  
+  @Before
+  public void beforeTest() {
+    // This code is called before every test.
+    accountDao = new InMemoryAccountDao();
+    teller = new SimpleBankingService(accountDao);
+  }
+  
   @Test
   public void testHelloBanking() {
     Assert.assertTrue(true);
   }
 
-//  @Test
-//  public void testCreateAccount() throws Exception {
-//    long fromAccountId = 1L;
-//    double fromBalance = 1_100;
-//    String fromName = "Tom";
-//
-//    AccountDao accountDao = InMemoryAccountDao.getInstance();
-//    accountDao.createAccount(fromAccountId, fromName, fromBalance);
-//
-//    Account fromAccount = accountDao.getAccount(fromAccountId);
-//   
-//    Assert.assertNotNull(fromAccount);
-//    Assert.assertEquals(fromAccountId, fromAccount.getAccountId());
-//    Assert.assertEquals(fromName, fromAccount.getName());
-//    Assert.assertEquals(fromBalance, fromAccount.getBalance(),  0.00_001);
-//  }
+  @Test
+  public void testCreateAccount() throws Exception {
+    long fromAccountId = 1L;
+    double fromBalance = 1_100;
+    String fromName = "Tom";
+
+    accountDao.createAccount(fromAccountId, fromName, fromBalance);
+
+    Account fromAccount = accountDao.getAccount(fromAccountId);
+   
+    Assert.assertNotNull(fromAccount);
+    Assert.assertEquals(fromAccountId, fromAccount.getAccountId());
+    Assert.assertEquals(fromName, fromAccount.getName());
+    Assert.assertEquals(fromBalance, fromAccount.getBalance(),  0.00_001);
+  }
   
   @Test
   public void testTransfer() throws Exception {
     
-    AccountDao accountDao = InMemoryAccountDao.getInstance();
-    
-    BankingService teller = new SimpleBankingService();
-
     long fromAccountId = 1L;
     double fromBalance = 1_100;
     String fromName = "Tom";
@@ -81,8 +87,9 @@ public class BankingServiceTest {
   
   @Test
   public void testZAccountNotFoundInGet() throws Exception {
-    AccountDao accountDao = InMemoryAccountDao.getInstance();
-    
+    //AccountDao accountDao = InMemoryAccountDao.getInstance();
+    // AccountDao accountDao = new InMemoryAccountDao();
+
     try {
       accountDao.getAccount(1L);
       Assert.fail("Expected some exception");
