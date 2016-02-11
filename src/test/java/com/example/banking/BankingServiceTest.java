@@ -6,13 +6,30 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+//@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class BankingServiceTest {
 
   @Test
   public void testHelloBanking() {
     Assert.assertTrue(true);
   }
+
+//  @Test
+//  public void testCreateAccount() throws Exception {
+//    long fromAccountId = 1L;
+//    double fromBalance = 1_100;
+//    String fromName = "Tom";
+//
+//    AccountDao accountDao = InMemoryAccountDao.getInstance();
+//    accountDao.createAccount(fromAccountId, fromName, fromBalance);
+//
+//    Account fromAccount = accountDao.getAccount(fromAccountId);
+//   
+//    Assert.assertNotNull(fromAccount);
+//    Assert.assertEquals(fromAccountId, fromAccount.getAccountId());
+//    Assert.assertEquals(fromName, fromAccount.getName());
+//    Assert.assertEquals(fromBalance, fromAccount.getBalance(),  0.00_001);
+//  }
   
   @Test
   public void testTransfer() throws Exception {
@@ -29,6 +46,9 @@ public class BankingServiceTest {
     double toBalance = 5;
     String toName = "Dick";
 
+    accountDao.createAccount(fromAccountId, fromName, fromBalance);
+    accountDao.createAccount(toAccountId, toName, toBalance);
+    
     // Account fromAccount = new Account(fromAccountId, fromName, fromBalance);
     Account fromAccount = accountDao.getAccount(fromAccountId);
     
@@ -60,15 +80,26 @@ public class BankingServiceTest {
   }
   
   @Test
-  // @Test(expected=AccountNotFoundException.class)
-  public void testAccountNotFoundInGet() throws Exception {
+  public void testZAccountNotFoundInGet() throws Exception {
     AccountDao accountDao = InMemoryAccountDao.getInstance();
     
-    Account a1 = accountDao.getAccount(1L);
-    Assert.assertNotNull(a1);
+    try {
+      accountDao.getAccount(1L);
+      Assert.fail("Expected some exception");
+      
+    } catch (AccountNotFoundException e) {
+      Assert.assertEquals(1L, e.getAccountId());
+      Assert.assertEquals("Account #1 was not found.", e.getMessage());
+    }
     
-    Account a2 = accountDao.getAccount(2L);
-    Assert.assertNotNull(a2);
+    try {
+      accountDao.getAccount(2L);
+      Assert.fail("Expected some exception");
+      
+    } catch (AccountNotFoundException e) {
+      Assert.assertEquals(2L, e.getAccountId());
+      Assert.assertEquals("Account #2 was not found.", e.getMessage());
+    }
     
     try {
       accountDao.getAccount(3L);

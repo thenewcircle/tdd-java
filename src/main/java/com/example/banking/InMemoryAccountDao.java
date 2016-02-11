@@ -14,8 +14,8 @@ public class InMemoryAccountDao implements AccountDao {
   private final Map<Long,Account> accounts = new HashMap<>();
   
   private InMemoryAccountDao() {
-    accounts.put(1L, new Account(1L, "Tom", 1_100));
-    accounts.put(2L, new Account(2L, "Dick", 5));
+//    accounts.put(1L, new Account(1L, "Tom", 1_100));
+//    accounts.put(2L, new Account(2L, "Dick", 5));
   }
   
   @Override
@@ -32,6 +32,12 @@ public class InMemoryAccountDao implements AccountDao {
       throw new AccountNotFoundException(account.getAccountId());
     }
     return accounts.put(account.getAccountId(), account);
+  }
+
+  @Override
+  public void createAccount(long id, String name, double balance) {
+    Account account = new Account(id, name, balance);
+    accounts.put(id, account);
   }
 }
 

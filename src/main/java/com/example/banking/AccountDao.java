@@ -6,4 +6,6 @@ public interface AccountDao {
 
   Account saveAccount(Account account) throws AccountNotFoundException;
 
+  void createAccount(long fromAccountId, String fromName, double fromBalance);
+
 }
